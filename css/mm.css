@@ -1,0 +1,54 @@
+.carousel-inner {
+    border-radius:20px;
+  }
+  
+  body{
+      background:#CCE2FF;
+  }
+  
+  #pagina{
+      background:#FFFFFF;
+  }
+  .produtos div{
+      display:inline-block;
+      text-align:left;
+      vertical-align: center;
+      margin:0 0.5%;
+      padding:15px 10px;
+      
+  }
+
+  .produtos li:hover h2{
+      font-size: 34px;
+  }
+  .titulo{
+      text-align:center;
+  }
+  .produtos{
+      display:inline-block;
+      align-items:center;
+  }
+  .produtos ul{
+      text-align:center;
+  }
+  .produtos li{
+      display:inline-block;
+      text-align:center;
+      vertical-align: top;
+      
+  }
+
+  .footer{
+    display: flex;
+	flex-wrap: wrap;
+    background-color: #007bff;
+    width: 100%;
+} 
+
+.footer > div{ 
+    padding-top: 10px;
+    width: 33%; 
+    text-align: center;
+    vertical-align: middle;
+    text-decoration-color: white;
+}
