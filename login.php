@@ -117,6 +117,7 @@
                 <label for="inputPassword3" class="col-sm-2 control-label">Senha</label>
                 <div class="col-sm-10">
                 <input type="password" class="form-control" id="inputPassword3" name="senha" placeholder="Password">
+                <input type="password" class="form-control" id="inputPassword3" name="senha" placeholder="Password" required>
                 </div>
             </div>
             <div class="form-check">
