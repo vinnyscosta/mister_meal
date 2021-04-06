@@ -1,4 +1,9 @@
 
+.container {
+    align:center;
+    border:1px solid;
+    border-radius:20px;
+}
 .carousel-inner {
     border-radius:20px;
   }
@@ -52,4 +57,40 @@
     text-align: center;
     vertical-align: middle;
     text-decoration-color: white;
+}
+
+.foto{
+    width: 100px;
+    height: 100px;
+}
+
+.divfoto > img{
+    align: center;
+}
+
+.desc{
+    text-align: center;
+}
+
+.list-group{    
+    display: flex;
+	flex-wrap: wrap;
+    width: 100%;
+}
+
+.produtos{
+    width: 250px;
+    height: 300px;
+}
+
+.produtos > h1, h2, h3, h4, h5, h6{
+    text-align: center;
+}
+
+.produtos div{
+    display:inline-block;
+    text-align:left;
+    vertical-align: center;
+    margin:0 0.5%;
+    padding:15px 10px;
 }
