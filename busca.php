@@ -17,6 +17,7 @@
 	$LOG_STATUS=$usuariologado;
 
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
@@ -27,9 +28,12 @@
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/mm.css">
-		<title>Lista - Mister Meal Delivery !</title>
+
+		<title>Home - Mister Meal Delivery !</title>
 		<style type="text/css">
+			.carousel-inner {
+			  border-radius:20px;
+			}
 			
 			body{
 				background:#CCE2FF;
@@ -38,18 +42,31 @@
 			#pagina{
 				background:#FFFFFF;
 			}
-			
+			.produtos div{
+				display:inline-block;
+				text-align:left;
+				vertical-align: center;
+				margin:0 0.5%;
+				padding:15px 10px;
+				
+			}
+
+			.produtos li:hover h2{
+				font-size: 34px;
+			}
 			.titulo{
 				text-align:center;
 			}
-
+			.produtos{
+				display:inline-block;
+			}
 		</style>
 	</head>
 	<body>
 	
 	<?php
 	
-	$TIPO_ESCOLHIDO=@$_POST['tipo_escolhido'];
+	
 	
 		$query_search = "SELECT * FROM `clientes` WHERE email_cliente = '".$usuariologado."'";
 		$resultado = mysqli_query($mysqli,$query_search);
@@ -68,7 +85,7 @@
 	
 	?>
 	
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 		  <a class="navbar-brand" href="#">
 			<img src="img/logo.svg" width="40" height="40" class="d-inline-block align-top" alt="">
 			Mister Meal Delivery !
@@ -94,7 +111,7 @@
 								<div class='dropdown-menu' aria-labelledby='navbarDropdown'>
 								  <a class='dropdown-item' href='perfil.php'>Ver Perfil</a>
 								  <a class='dropdown-item' href='endereco.php'>Endereços de entrega</a>
-								  <a class='dropdown-item' href='pedidos_feitos.php'>Pedidos Recentes</a>
+								  <a class='dropdown-item' href='#'>Pedidos Recentes</a>
 								  <div class='dropdown-divider'></div>
 								  <a class='dropdown-item' href='sair.php'>Sair</a>
 								</div>
@@ -117,12 +134,11 @@
 								echo "erro";
 								die($message);
 							}
-							//
+							
 							while ($row = mysqli_fetch_array($resultado)) {
 								//echo "<a class='dropdown-item' href='index.php' name='tipo_escolhido' value='".$row[0]."'>".$row[1]."</a>";
 								echo "<form action='pagina_lista.php' method='post'><tr><td><input class='dropdown-item' name='tipo_escolhido' type='submit' value='".$row[1]."' action='pagina_lista.php' method='post'></td></tr></form>";
 							}
-							//echo "</form>";
 
 							mysqli_free_result($resultado);
 						?>
@@ -137,20 +153,19 @@
 				  <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Pesquisar</button>
 				</form>
 		  </div>
-	</nav>
+		</nav>
 		
 		<br>
 		
 		<?php
-		if ($TIPO_ESCOLHIDO==''){
-			echo "Nenhum tipo selecionado.";
+		$BUSCA=@$_POST['busca'];
+		
+		if ($BUSCA==''){
+			echo "Nada Encontrado.";
 		} else {
 			echo "<main>";
 			echo "<div class='container' id='pagina'>";
-			$query_select = "SELECT pratos.cod_prato, pratos.nome_prato, pratos.cod_tipo, pratos.preco_prato, pratos.descricao_prato, pratos.disponibilidade
-				FROM `pratos` 
-				INNER JOIN tipo_pratos ON tipo_pratos.cod_tipo = pratos.cod_tipo
-				WHERE tipo_pratos.nome_tipo = '".$TIPO_ESCOLHIDO."' AND pratos.disponibilidade = 'DISPONIVEL'";
+			$query_select = "SELECT * FROM `pratos` WHERE nome_prato LIKE '%".$BUSCA."%'";
 			$resultado_select = mysqli_query($mysqli,$query_select);
 			
 			if (!$resultado_select) {
@@ -159,43 +174,44 @@
 				echo "erro";
 				die($message);
 			}else{
-				echo "<br><div class='titulo'><caption><h3>".$TIPO_ESCOLHIDO."</h3></caption></div><br>";
-				echo "<div class='lista_produtos' class='list-group'>";
+				echo "<br><div class='titulo'><caption><h3>Resultados para '".$BUSCA."'</h3></caption></div><br>";
+				echo "<div class='list-group'>";
+				//echo "<tr><th>ID</th><th>Item</th><th>Quantidade</th></tr>";
 				while ($row = mysqli_fetch_array($resultado_select)) {
-					echo 
-						"<div class='produtos'>
+					//echo "<tr><td>".$row[0]."</td><td>".$row[1]."</td><td><input type='number' min='0' max='10000' class='form-control' id='preco' name='preco' value='".$row[3]."' required></td></tr>";
+					echo "<div class='produtos'>
 							<a href='#' class='list-group-item list-group-item-action'>
-								<div class='divfoto'>
-									<img class='foto' src='img/".$row[0].".jpg'>
+								<div class='foto'>
+									<img src='img/".$row[0].".jpg' width='100' height='100'>
 								</div>
-                                <br>
 								<div clas='desc'>
 									<h5>".$row[1]."</h5>
-									<h6 class='produto-descricao'>".$row[4]."<h6>
+									<h4 class='produto-descricao'>".$row[4]."<h4>
 									<h5 class='produto-preco'>".$row[3]."<h5>
 								</div>
-                                <br>
 								<div class='adic'>
 								<form action='add_carrinho.php' method='post'>
 									<input type='hidden' name='item_escolhido' VALUE='".$row[0]."'>
-									<input class='btn btn-info' name='item' type='submit' value='Adicionar ao carrinho'>
+									<label>Quantidade:</label>
+									<input type='number' name='quant'>
+									<input class='btn btn-info' name='item' type='submit' value='Adicionar ao carrinho' size='30'>
 								</form>
 								</div>
 							</a>
 						</div>";
 				}
-				echo "<br>";
+				
+				echo "<caption>Produtos do tipo ".$BUSCA."</caption><br>";
 				echo "</div>";
-				echo "<caption>Produtos do tipo ".$TIPO_ESCOLHIDO."</caption><br>";
 			}
 			mysqli_free_result($resultado_select);
-            echo "<br>";
 			echo "</div>";
 			echo "</main>";
 		}
+
 		?>
 
-		<br>
+        <br>
 		
 		<div class="footer">
 			<div>

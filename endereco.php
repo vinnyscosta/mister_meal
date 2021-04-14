@@ -27,30 +27,21 @@
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/mm.css">
-		<title>Lista - Mister Meal Delivery !</title>
+
+		<title>Endereço - Mister Meal Delivery !</title>
 		<style type="text/css">
-			
+			#carrinho{
+				background:#FFFFFF;
+			}
 			body{
 				background:#CCE2FF;
 			}
-			
-			#pagina{
-				background:#FFFFFF;
-			}
-			
-			.titulo{
-				text-align:center;
-			}
-
 		</style>
+        <link rel="stylesheet" href="css/mm.css">
 	</head>
 	<body>
 	
 	<?php
-	
-	$TIPO_ESCOLHIDO=@$_POST['tipo_escolhido'];
-	
 		$query_search = "SELECT * FROM `clientes` WHERE email_cliente = '".$usuariologado."'";
 		$resultado = mysqli_query($mysqli,$query_search);
 	
@@ -68,7 +59,7 @@
 	
 	?>
 	
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 		  <a class="navbar-brand" href="#">
 			<img src="img/logo.svg" width="40" height="40" class="d-inline-block align-top" alt="">
 			Mister Meal Delivery !
@@ -94,7 +85,7 @@
 								<div class='dropdown-menu' aria-labelledby='navbarDropdown'>
 								  <a class='dropdown-item' href='perfil.php'>Ver Perfil</a>
 								  <a class='dropdown-item' href='endereco.php'>Endereços de entrega</a>
-								  <a class='dropdown-item' href='pedidos_feitos.php'>Pedidos Recentes</a>
+								  <a class='dropdown-item' href='#'>Pedidos Recentes</a>
 								  <div class='dropdown-divider'></div>
 								  <a class='dropdown-item' href='sair.php'>Sair</a>
 								</div>
@@ -117,12 +108,10 @@
 								echo "erro";
 								die($message);
 							}
-							//
 							while ($row = mysqli_fetch_array($resultado)) {
-								//echo "<a class='dropdown-item' href='index.php' name='tipo_escolhido' value='".$row[0]."'>".$row[1]."</a>";
 								echo "<form action='pagina_lista.php' method='post'><tr><td><input class='dropdown-item' name='tipo_escolhido' type='submit' value='".$row[1]."' action='pagina_lista.php' method='post'></td></tr></form>";
+										
 							}
-							//echo "</form>";
 
 							mysqli_free_result($resultado);
 						?>
@@ -137,20 +126,19 @@
 				  <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Pesquisar</button>
 				</form>
 		  </div>
-	</nav>
+	    </nav>
 		
 		<br>
 		
+		<div class="container" id="carrinho">
 		<?php
-		if ($TIPO_ESCOLHIDO==''){
+		if ($COD_USUARIO==''){
 			echo "Nenhum tipo selecionado.";
 		} else {
 			echo "<main>";
-			echo "<div class='container' id='pagina'>";
-			$query_select = "SELECT pratos.cod_prato, pratos.nome_prato, pratos.cod_tipo, pratos.preco_prato, pratos.descricao_prato, pratos.disponibilidade
-				FROM `pratos` 
-				INNER JOIN tipo_pratos ON tipo_pratos.cod_tipo = pratos.cod_tipo
-				WHERE tipo_pratos.nome_tipo = '".$TIPO_ESCOLHIDO."' AND pratos.disponibilidade = 'DISPONIVEL'";
+			echo "<div class='container_end' id='pagina_end'>";
+			$query_select = "SELECT `cod_end`, `cod_cliente`, `cep`, `rua`, `numero`, `complemento`, `bairro`, `cidade`, `estado` 
+				FROM `endereco` WHERE `cod_cliente` = '$COD_USUARIO'";
 			$resultado_select = mysqli_query($mysqli,$query_select);
 			
 			if (!$resultado_select) {
@@ -159,45 +147,69 @@
 				echo "erro";
 				die($message);
 			}else{
-				echo "<br><div class='titulo'><caption><h3>".$TIPO_ESCOLHIDO."</h3></caption></div><br>";
-				echo "<div class='lista_produtos' class='list-group'>";
+				echo "<br><div class='titulo'><caption><h3>Endereços de ".$USUARIO."</h3></caption></div><br>";
+				echo "<div class='list-group'>";
+				//echo "<tr><th>ID</th><th>Item</th><th>Quantidade</th></tr>";
 				while ($row = mysqli_fetch_array($resultado_select)) {
-					echo 
-						"<div class='produtos'>
+					//echo "<tr><td>".$row[0]."</td><td>".$row[1]."</td><td><input type='number' min='0' max='10000' class='form-control' id='preco' name='preco' value='".$row[3]."' required></td></tr>";
+					echo "<div class='enderecos'>
 							<a href='#' class='list-group-item list-group-item-action'>
-								<div class='divfoto'>
-									<img class='foto' src='img/".$row[0].".jpg'>
-								</div>
-                                <br>
 								<div clas='desc'>
-									<h5>".$row[1]."</h5>
-									<h6 class='produto-descricao'>".$row[4]."<h6>
-									<h5 class='produto-preco'>".$row[3]."<h5>
+                                    <p><h4><b>".$row[3]."</b>, ".$row[4]."</h4></p>
+									<p><b>ID: </b> ".$row[0]."</p>
+									<p><b>Rua: </b> ".$row[3]."
+									<b>Numero: </b> ".$row[4]."</p>
+									<p><b>Complemento: </b> ".$row[5]."</p>
+									<p><b>CEP: </b> ".$row[2]."</h5>
+									<b>Bairro: </b> ".$row[6]."</p>
+									<p><b>Cidade: </b> ".$row[7]."
+									<b>Estado: </b> ".$row[8]."</p>
 								</div>
-                                <br>
 								<div class='adic'>
-								<form action='add_carrinho.php' method='post'>
-									<input type='hidden' name='item_escolhido' VALUE='".$row[0]."'>
-									<input class='btn btn-info' name='item' type='submit' value='Adicionar ao carrinho'>
+								<table>
+								<tr>
+								<td>
+								<form action='editar_endereco.php' method='post'>
+									<input type='hidden' name='cod_end' VALUE='".$row[0]."'>
+									<input type='hidden' name='cod_cliente' VALUE='".$row[1]."'>
+									<input type='hidden' name='cep' VALUE='".$row[2]."'>
+									<input type='hidden' name='rua' VALUE='".$row[3]."'>
+									<input type='hidden' name='numero' VALUE='".$row[4]."'>
+									<input type='hidden' name='complemento' VALUE='".$row[5]."'>
+									<input type='hidden' name='bairro' VALUE='".$row[6]."'>
+									<input type='hidden' name='cidade' VALUE='".$row[7]."'>
+									<input type='hidden' name='estado' VALUE='".$row[8]."'>
+									<input class='btn btn-info' name='edit' type='submit' value='Alterar' size='30'>
 								</form>
+								</td>
+								<td>
+								<form action='del_endereco.php' method='post'>
+									<input type='hidden' name='codigo_end' VALUE='".$row[0]."'>
+									<input type='hidden' name='cod_cliente' VALUE='".$row[1]."'>
+									<input class='btn btn-info' name='edit' type='submit' value='Excluir' size='30'>
+								</form>
+								</td>
+								</tr>
+								</table>
 								</div>
 							</a>
 						</div>";
 				}
-				echo "<br>";
+				
+				echo "<caption>Endereços de ".$USUARIO."</caption><br>";
 				echo "</div>";
-				echo "<caption>Produtos do tipo ".$TIPO_ESCOLHIDO."</caption><br>";
 			}
 			mysqli_free_result($resultado_select);
-            echo "<br>";
 			echo "</div>";
 			echo "</main>";
 		}
 		?>
+		<a href="add_endereco.php">Adicionar novo endereço aqui...</a>
+		</div>
 
-		<br>
-		
-		<div class="footer">
+        <br>
+
+        <div class="footer">
 			<div>
                 <h3><a class="nav-link" href="Sobre.php" style="color:white;">Sobre nós</a></h3>
             </div>
@@ -213,9 +225,7 @@
 		</div>
         <br>
 
-		<?php
-		//echo "<h5>".$TIPO_ESCOLHIDO."</h5>";
-		?>
+		
 
 		<!-- JavaScript (Opcional) -->
 		<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
