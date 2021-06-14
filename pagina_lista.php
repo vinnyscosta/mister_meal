@@ -49,7 +49,7 @@
 	
 	<?php
 	
-	$TIPO_ESCOLHIDO=@$_POST['tipo_escolhido'];
+	$TIPO_ESCOLHIDO=@$_GET['tipo_escolhido'];
 	
 		$query_search = "SELECT * FROM `clientes` WHERE email_cliente = '".$usuariologado."'";
 		$resultado = mysqli_query($mysqli,$query_search);
@@ -120,7 +120,7 @@
 							//
 							while ($row = mysqli_fetch_array($resultado)) {
 								//echo "<a class='dropdown-item' href='index.php' name='tipo_escolhido' value='".$row[0]."'>".$row[1]."</a>";
-								echo "<form action='pagina_lista.php' method='post'><tr><td><input class='dropdown-item' name='tipo_escolhido' type='submit' value='".$row[1]."' action='pagina_lista.php' method='post'></td></tr></form>";
+								echo "<form action='pagina_lista.php' method='get'><tr><td><input class='dropdown-item' name='tipo_escolhido' type='submit' value='".$row[1]."' action='pagina_lista.php' method='post'></td></tr></form>";
 							}
 							//echo "</form>";
 
@@ -176,8 +176,10 @@
 								</div>
                                 <br>
 								<div class='adic'>
-								<form action='add_carrinho.php' method='post'>
+								<form action='carrinho.php' method='post'>
 									<input type='hidden' name='item_escolhido' VALUE='".$row[0]."'>
+									<input type='hidden' name='quantidade' VALUE='1'>
+									<input type='hidden' name='comando' VALUE='add'>
 									<input class='btn btn-info' name='item' type='submit' value='Adicionar ao carrinho'>
 								</form>
 								</div>

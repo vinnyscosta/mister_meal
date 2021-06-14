@@ -17,6 +17,7 @@
 	$LOG_STATUS=$usuariologado;
 
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
@@ -58,6 +59,25 @@
 	
 	$PRECO = 0;
 	
+	?>
+
+	<?php
+		
+		$ITEM_ESCOLHIDO=@$_POST['item_escolhido'];
+		$QUANTIDADE=@$_POST['quantidade'];
+
+		if (@$_POST['comando'] == "add"){
+			$query_add = "INSERT INTO `carrinho`(`cod_prato`, `cod_cliente`, `quant`) VALUES (".$ITEM_ESCOLHIDO.",".$COD_USUARIO.",".$QUANTIDADE.")";
+			echo "<script>alert('1');</script>";
+			if (mysqli_query($mysqli, $query_add)){
+				echo "<script>alert('Cadastro realizado com sucesso !');</script>";
+				$QUANTIDADE='';
+				$ITEM_ESCOLHIDO='';
+			}else{
+				echo "<script>alert('ERRO! Tente novamente');</script>";
+			}
+		}
+
 	?>
 	
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -112,7 +132,7 @@
 							
 							while ($row = mysqli_fetch_array($resultado)) {
 								//echo "<a class='dropdown-item' href='index.php' name='tipo_escolhido' value='".$row[0]."'>".$row[1]."</a>";
-								echo "<form action='pagina_lista.php' method='post'><tr><td><input class='dropdown-item' name='tipo_escolhido' type='submit' value='".$row[1]."' action='pagina_lista.php' method='post'></td></tr></form>";
+								echo "<form action='pagina_lista.php' method='get'><tr><td><input class='dropdown-item' name='tipo_escolhido' type='submit' value='".$row[1]."' action='pagina_lista.php' method='post'></td></tr></form>";
 							}
 
 							mysqli_free_result($resultado);
