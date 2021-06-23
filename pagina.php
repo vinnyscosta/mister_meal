@@ -46,6 +46,23 @@
             } 
 	</style>
         <link rel="stylesheet" href="css/mm.css">
+		<style>
+		.img_pag{
+			width:40%;
+			height:40%;
+			border-radius: 10px;
+			display: block;
+			margin-left: auto;
+			margin-right: auto 
+		}
+		.lado div{
+			display:inline-block;
+			width: auto;
+			align:center;
+			margin-left: auto;
+			margin-right: auto 
+				}
+		</style>
 	</head>
 	<body>
 	
@@ -65,7 +82,7 @@
 		$USUARIO = $row[1];
 	}
 	
-    $PRATO_ESCOLHIDO=@$_POST['tipo_escolhido'];
+    $PRATO_ESCOLHIDO=@$_GET['item_selecionado'];
 
 	?>
 	
@@ -140,12 +157,9 @@
 		
 		<br>
 		
-		<div class="container">
+		<div class="container" id="pagina">
 		<?php
-			$query_select = "SELECT pratos.cod_prato, pratos.nome_prato, pratos.cod_tipo, pratos.preco_prato, pratos.descricao_prato, pratos.disponibilidade
-            FROM `pratos` 
-            INNER JOIN tipo_pratos ON tipo_pratos.cod_tipo = pratos.cod_tipo
-            WHERE tipo_pratos.nome_tipo = '".$TIPO_ESCOLHIDO."' AND pratos.disponibilidade = 'DISPONIVEL'";
+			$query_select = "SELECT `cod_prato`, `nome_prato`, `preco_prato`, `descricao_prato`, `disponibilidade` FROM `pratos` WHERE `cod_prato` = ".$PRATO_ESCOLHIDO."";
 			$resultado_select = mysqli_query($mysqli,$query_select);
 			
 			if (!$resultado_select) {
@@ -154,16 +168,40 @@
 				echo "erro";
 				die($message);
 			}else{
-				echo "<h3>Perfil de ".$USUARIO."</h3>";
 				while ($row = mysqli_fetch_array($resultado_select)) {
-					echo "<p>Nome Completo: ".$row[0]."</p>";
-					echo "<p>Telefone: ".$row[1]."</p>";
-					echo "<p>E-mail: ".$row[2]."</p>";
+					echo 
+						"
+						<div id='lado'>
+							<br>
+							<div>
+								<img class='img_pag' src='img/".$row[0].".jpg'>
+							</div>
+							<div>
+								<p>
+									<h5>".$row[1]."</h5>
+								</p>
+								<p>
+									".$row[3]."
+								</p>
+								<p class='preço'>
+									<h6>$".$row[2]."</h6>
+								</p>
+								<p>
+									Status: ".$row[4]."
+								</p>
+							</div>
+							<form action='carrinho.php' method='post'>
+								<input type='hidden' name='item_escolhido' VALUE='".$row[0]."'>
+								<input type='hidden' name='quantidade' VALUE='1'>
+								<input type='hidden' name='comando' VALUE='add'>
+								<input class='btn btn-info' name='item' type='submit' value='Adicionar ao carrinho'>
+							</form>
+							<br>
+                        </div>";
 				}
 			}
 			mysqli_free_result($resultado_select);
 		?>
-		<a href="altera_perfil.php">Alterar dados aqui...</a>
 		</div>
         <br>
 		
@@ -181,7 +219,6 @@
                 <h3><a class="nav-link" href="perguntas.php" style="color:white;">Perguntas Frequentes</a></h3>
             </div>
 		</div>
-        <br>
 		
 
 		<!-- JavaScript (Opcional) -->

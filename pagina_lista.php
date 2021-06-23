@@ -164,7 +164,7 @@
 				while ($row = mysqli_fetch_array($resultado_select)) {
 					echo 
 						"<div class='produtos'>
-							<a href='#' class='list-group-item list-group-item-action'>
+							<a href='pagina.php?item_selecionado=".$row[0]."' class='list-group-item list-group-item-action'>
 								<div class='divfoto'>
 									<img class='foto' src='img/".$row[0].".jpg'>
 								</div>
